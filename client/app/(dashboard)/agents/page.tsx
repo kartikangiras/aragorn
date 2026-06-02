@@ -203,10 +203,7 @@ export default function AgentsPage() {
 
       {/* Agent Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredAgents.map((agent) => {
-          const reputation = Number(agent.reputation);
-
-          return (
+        {filteredAgents.map((agent) => (
             <Card
               key={agent.snsDomain}
               className="bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] rounded-xl hover:border-white/[0.12] transition-all duration-300 hover:-translate-y-1"
@@ -235,12 +232,8 @@ export default function AgentsPage() {
                   <div>
                     <p className="text-xs text-aragorn-text-muted">Price</p>
                     <p className="font-mono text-aragorn-emerald">
-                      ${(Number(agent.priceMicroStablecoin) / 1_000_000_000).toFixed(6)} SOL
+                      {(Number(agent.priceMicroStablecoin) / 1_000_000_000).toFixed(4)} SOL
                     </p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-aragorn-text-muted">Reputation</p>
-                    <p>{isNaN(reputation) ? '—' : `${reputation}%`}</p>
                   </div>
                 </div>
 
@@ -282,8 +275,7 @@ export default function AgentsPage() {
                 </div>
               </CardContent>
             </Card>
-          );
-        })}
+        ))}
       </div>
 
       {!loading && filteredAgents.length === 0 && (

@@ -1,7 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useWallet } from '@solana/wallet-adapter-react';
@@ -40,43 +39,11 @@ const FEATURES = [
 
 const MARQUEE_ITEMS = ['Solana', 'x402 Protocol', 'Umbra SDK', 'Covalent', 'Bonfida SNS', 'QVAC', 'Anchor', 'Agent Orchestration', 'Privacy Layer'];
 
-const STATS = [
-  { label: 'Total Value Locked', value: '$16.9M', suffix: '' },
-  { label: 'Transactions', value: '1.2M', suffix: '+' },
-  { label: 'Active Agents', value: '47', suffix: '' },
-  { label: 'Privacy Score', value: '98.2', suffix: '%' },
-];
-
 const STEPS = [
   { num: '01', title: 'Deploy Agents', desc: 'Register sovereign agents with SNS domains, set pricing, and define capabilities.' },
   { num: '02', title: 'Fund & Orchestrate', desc: 'Deposit funds via Dodo fiat on-ramp or direct wallet transfer. The orchestrator matches queries to optimal agents.' },
   { num: '03', title: 'Execute Autonomously', desc: 'Agents execute tasks, settle payments via x402, and record reputation on-chain.' },
 ];
-
-/* ─── Animated counter ───────────────────────────── */
-function Counter({ value, suffix }: { value: string; suffix: string }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const isInView = useInView(ref, { once: true });
-  const [display, setDisplay] = useState('0');
-
-  useEffect(() => {
-    if (!isInView) return;
-    const num = parseFloat(value.replace(/[^0-9.]/g, ''));
-    const prefix = value.replace(/[0-9.]/g, '');
-    const dur = 1600;
-    const start = Date.now();
-    const tick = () => {
-      const p = Math.min((Date.now() - start) / dur, 1);
-      const ease = 1 - Math.pow(1 - p, 3);
-      const current = num * ease;
-      setDisplay(prefix + (num >= 100 ? Math.round(current).toString() : current.toFixed(1)));
-      if (p < 1) requestAnimationFrame(tick);
-    };
-    requestAnimationFrame(tick);
-  }, [isInView, value]);
-
-  return <span ref={ref}>{display}{suffix}</span>;
-}
 
 /* ─── Wallet button ──────────────────────────────── */
 function WalletConnectButton() {
@@ -227,45 +194,62 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ─── STATS ───────────────────────────────── */}
-      <section className="py-24 px-6">
-        <div className="max-w-5xl mx-auto">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0} className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-white/90">Network Analytics</h2>
-          </motion.div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {STATS.map((s, i) => (
-              <motion.div key={s.label} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i}
-                className="p-6 rounded-xl text-center" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}>
-                <p className="text-3xl md:text-4xl font-bold text-white/90 mb-1"><Counter value={s.value} suffix={s.suffix} /></p>
-                <p className="text-xs text-white/25">{s.label}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ─── TERMINAL DEMO ───────────────────────── */}
+      {/* ─── CHAT DEMO ───────────────────────── */}
       <section className="py-24 px-6" style={{ background: 'rgba(255,255,255,0.01)' }}>
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-3xl mx-auto">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0} className="text-center mb-12">
             <p className="text-xs uppercase tracking-[0.2em] text-aragorn-cyan mb-4 font-medium">Live Preview</p>
             <h2 className="text-3xl md:text-4xl font-bold text-white/90">See agents in action</h2>
           </motion.div>
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={1}>
-            <div className="rounded-xl overflow-hidden" style={{ background: 'rgba(0,0,0,0.6)', border: '1px solid rgba(255,255,255,0.06)' }}>
-              <div className="flex items-center gap-2 px-4 py-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                <span className="w-2.5 h-2.5 rounded-full bg-red-400/60" /><span className="w-2.5 h-2.5 rounded-full bg-yellow-400/60" /><span className="w-2.5 h-2.5 rounded-full bg-green-400/60" />
-                <span className="ml-2 text-[10px] text-white/20 font-mono">agent-terminal</span>
+            <div className="rounded-2xl overflow-hidden" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(20px)' }}>
+              {/* Chat Header */}
+              <div className="flex items-center gap-3 px-5 py-4" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-aragorn-emerald to-aragorn-cyan flex items-center justify-center text-white text-xs font-bold">A</div>
+                <div>
+                  <p className="text-sm font-medium text-white/90">Aragorn Agent</p>
+                  <p className="text-[10px] text-white/30 flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-aragorn-emerald" /> Online</p>
+                </div>
               </div>
-              <div className="p-6 font-mono text-xs space-y-3">
-                <div className="text-white/30"><span className="text-aragorn-emerald">$</span> aragorn query &quot;Analyze yield farming strategies on Solana&quot;</div>
-                <div className="text-white/20">→ Planning execution...</div>
-                <div className="text-white/20">→ Hiring <span className="text-aragorn-purple">DeFiAnalyst</span>, <span className="text-aragorn-purple">YieldOptimizer</span></div>
-                <div className="text-white/20">→ x402 payment: <span className="text-aragorn-cyan">0.002 SOL</span> per agent</div>
-                <div className="text-white/20">→ Privacy layer: <span className="text-aragorn-emerald">Umbra stealth active</span></div>
-                <div className="text-white/25 mt-2 pl-4" style={{ borderLeft: '2px solid rgba(129,140,248,0.2)' }}>Analysis complete. Top strategy: Marinade Finance mSOL staking at 7.2% APY with auto-compounding via Tulip Protocol.</div>
-                <div className="text-white/15">✓ Settled on-chain · 420ms · 2 agents hired</div>
+
+              {/* Chat Messages */}
+              <div className="p-5 space-y-4">
+                {/* User message */}
+                <div className="flex justify-end">
+                  <div className="max-w-[80%] rounded-2xl rounded-tr-sm px-4 py-3 text-sm" style={{ background: 'rgba(129,140,248,0.15)', color: '#e0e0ff' }}>
+                    Analyze yield farming strategies on Solana
+                  </div>
+                </div>
+
+                {/* Agent thinking */}
+                <div className="flex items-start gap-2">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-aragorn-purple to-aragorn-cyan flex items-center justify-center text-white text-[10px] font-bold shrink-0 mt-0.5">A</div>
+                  <div className="space-y-2">
+                    <div className="text-xs text-white/40">Hiring <span className="text-aragorn-purple font-medium">DeFiAnalyst</span> and <span className="text-aragorn-purple font-medium">YieldOptimizer</span>...</div>
+                    <div className="text-xs text-white/40">x402 payment: <span className="text-aragorn-cyan font-medium">0.002 SOL</span> per agent · Umbra stealth active</div>
+                  </div>
+                </div>
+
+                {/* Agent response */}
+                <div className="flex items-start gap-2">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-aragorn-purple to-aragorn-cyan flex items-center justify-center text-white text-[10px] font-bold shrink-0 mt-0.5">A</div>
+                  <div className="max-w-[85%] rounded-2xl rounded-tl-sm px-4 py-3 text-sm leading-relaxed" style={{ background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.85)' }}>
+                    Analysis complete. Top strategy: Marinade Finance mSOL staking at 7.2% APY with auto-compounding via Tulip Protocol.
+                    <div className="mt-2 pt-2 text-[10px] text-white/25" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                      Settled on-chain · 420ms · 2 agents hired
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Chat Input */}
+              <div className="px-5 py-4" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                <div className="flex items-center gap-3 rounded-full px-4 py-2.5" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                  <input type="text" readOnly placeholder="Type a message..." className="flex-1 bg-transparent text-sm text-white/50 outline-none placeholder:text-white/20" />
+                  <div className="w-7 h-7 rounded-full bg-aragorn-emerald/20 flex items-center justify-center">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13" /><polygon points="22 2 15 22 11 13 2 9 22 2" /></svg>
+                  </div>
+                </div>
               </div>
             </div>
           </motion.div>

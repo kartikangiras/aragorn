@@ -1,7 +1,7 @@
 const DEFAULT_PROGRAM_ID = '11111111111111111111111111111111';
 const DEFAULT_RPC_URL = 'https://api.devnet.solana.com';
 const DEFAULT_SERVER_BASE_URL = 'http://localhost:3002';
-const DEFAULT_PAYMENT_MODE = 'server';
+const DEFAULT_PAYMENT_MODE = 'wallet';
 
 export type AragornPaymentMode = 'server' | 'wallet';
 

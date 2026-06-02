@@ -10,14 +10,20 @@ export function assertStartupConfig(env: NodeJS.ProcessEnv = process.env): void 
 
   if (serverConfig.paymentMode === 'server') {
     if (!env.ARAGORN_PAYER_SECRET_KEY) {
-      issues.push('Missing ARAGORN_PAYER_SECRET_KEY for server payment mode');
+      issues.push(
+        'Missing ARAGORN_PAYER_SECRET_KEY for server payment mode. ' +
+        'Either set ARAGORN_PAYMENT_MODE=wallet or provide a payer secret key.'
+      );
     }
   }
 
   if (serverConfig.paymentMode === 'wallet') {
     const walletMap = getAgentWalletMap(env);
     if (Object.keys(walletMap).length === 0) {
-      issues.push('Missing ARAGORN_AGENT_WALLET_MAP entries for wallet payment mode');
+      issues.push(
+        'Missing ARAGORN_AGENT_WALLET_MAP entries for wallet payment mode. ' +
+        'If your .env file is not being loaded, run with: node --env-file=server/.env dist/server/src/main.js'
+      );
     }
 
     for (const agent of AGENTS) {

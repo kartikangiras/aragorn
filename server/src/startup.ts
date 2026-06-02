@@ -33,10 +33,18 @@ export function assertStartupConfig(env: NodeJS.ProcessEnv = process.env): void 
   }
 
   if (serverConfig.umbraEnabled) {
+    const missingUmbra: string[] = [];
     for (const agent of AGENTS) {
       if (!getUmbraSecretForDomain(agent.domain, env)) {
-        issues.push(`Missing Umbra secret for ${agent.domain}`);
+        missingUmbra.push(agent.domain);
       }
+    }
+    if (missingUmbra.length > 0) {
+      console.warn(
+        `[Startup] Umbra is enabled but secrets are missing for ${missingUmbra.length} agent(s). ` +
+        `Set ARAGORN_UMBRA_SECRET_MAP or individual ARAGORN_UMBRA_SECRET_* env vars. ` +
+        `Missing: ${missingUmbra.join(', ')}`
+      );
     }
   }
 

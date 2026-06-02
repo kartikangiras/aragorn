@@ -59,7 +59,6 @@ export function listPayments(limit = 100, offset = 0): PaymentRecord[] {
 export function getPaymentStats(): PaymentStats {
   const totalsByToken: Record<TokenKind, bigint> = {
     SOL: BigInt(0),
-    PALM_USD: BigInt(0),
   };
   const byAgent: Record<string, number> = {};
   const byDepth: Record<string, number> = {};
@@ -82,7 +81,6 @@ export function getPaymentStats(): PaymentStats {
     uniquePayers: payers.size,
     totalsByToken: {
       SOL: totalsByToken.SOL.toString(),
-      PALM_USD: totalsByToken.PALM_USD.toString(),
     },
     byAgent,
     byDepth,

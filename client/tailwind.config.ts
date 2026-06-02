@@ -1,5 +1,5 @@
 /**
- * Aldor Design System
+ * Aragorn Design System
  * Dark-mode only. Glassmorphism + minimalist palette.
  * Primary accent: soft indigo/ice-blue. Secondary: warm amber.
  */
@@ -48,8 +48,8 @@ const config: Config = {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        // Aldor custom palette — cool minimalist
-        aldor: {
+        // Aragorn custom palette — cool minimalist
+        aragorn: {
           black: "#030303",
           void: "#0D0D0D",
           graphite: "#0a0a0a",

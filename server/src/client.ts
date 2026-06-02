@@ -8,25 +8,25 @@ import {
   Transaction,
   sendAndConfirmTransaction,
 } from '@solana/web3.js';
-import type { AldorRequestConfig, PaidResponse, PaymentProof } from './types.js';
+import type { AragornRequestConfig, PaidResponse, PaymentProof } from './types.js';
 import { parsePaymentRequiredHeader } from './x402.js';
 
-export interface AldorClientOptions {
+export interface AragornClientOptions {
   rpcUrl: string;
   secretKey: string;
   payer?: Keypair;
 }
 
-export class AldorClient {
+export class AragornClient {
   readonly connection: Connection;
   readonly payer: Keypair;
 
-  constructor(options: AldorClientOptions) {
+  constructor(options: AragornClientOptions) {
     this.connection = new Connection(options.rpcUrl, 'confirmed');
     this.payer = options.payer ?? Keypair.fromSecretKey(bs58.decode(options.secretKey));
   }
 
-  async request<T = unknown>(url: string, config: AldorRequestConfig = {}): Promise<PaidResponse<T>> {
+  async request<T = unknown>(url: string, config: AragornRequestConfig = {}): Promise<PaidResponse<T>> {
     try {
       return await axios.request<T>({ url, ...config });
     } catch (error: any) {
@@ -40,7 +40,7 @@ export class AldorClient {
 
   private async handlePaymentRequired<T = unknown>(
     url: string,
-    config: AldorRequestConfig,
+    config: AragornRequestConfig,
     response: AxiosResponse,
   ): Promise<PaidResponse<T>> {
     const { requirements } = parsePaymentRequiredHeader(response);

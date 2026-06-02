@@ -9,8 +9,12 @@ export function createPaidAxios(options) {
     const instance = axios.create();
     instance.interceptors.request.use((config) => {
         config.headers = config.headers ?? {};
-        config.headers['X-Aldor-Max-Depth'] = String(options.budget.maxDepth);
-        config.headers['X-Aldor-Budget-Remaining'] = options.budget.budgetRemaining;
+        if (!config.headers['X-Aragorn-Max-Depth']) {
+            config.headers['X-Aragorn-Max-Depth'] = String(options.budget.maxDepth);
+        }
+        if (!config.headers['X-Aragorn-Budget-Remaining']) {
+            config.headers['X-Aragorn-Budget-Remaining'] = options.budget.budgetRemaining;
+        }
         return config;
     });
     instance.interceptors.response.use((response) => response, async (error) => {
@@ -18,18 +22,32 @@ export function createPaidAxios(options) {
             throw error;
         }
         const original = error.config;
-        if (original._aldorRetried) {
+        if (original._aragornRetried) {
             throw error;
         }
         const challenge = decodeChallenge(error.response.data);
-        const accept = challenge.accepts?.[0];
+        const accept = challenge.accepts?.[0] ?? (
+            challenge.recipient && challenge.amount && challenge.asset && challenge.resource
+                ? {
+                    scheme: 'exact',
+                    network: challenge.network ?? 'solana-devnet',
+                    maxAmountRequired: challenge.amount,
+                    resource: challenge.resource,
+                    description: challenge.description,
+                    payTo: challenge.recipient,
+                    asset: challenge.asset,
+                }
+                : undefined
+        );
         if (!accept) {
             throw new Error('Missing x402 accepts entry');
         }
         const proof = await options.signChallenge(accept);
-        original._aldorRetried = true;
+        original._aragornRetried = true;
         original.headers = original.headers ?? {};
         original.headers['X-Payment'] = Buffer.from(JSON.stringify(proof)).toString('base64');
+        original.headers['X-Aragorn-Payment-Signature'] = proof.signature;
+        original.headers['X-Aragorn-Ephemeral-Key'] = proof.ephemeralKey ?? 'mock-ephemeral-key';
         original.headers['X-Payment-Signature'] = proof.signature;
         return instance.request(original);
     });

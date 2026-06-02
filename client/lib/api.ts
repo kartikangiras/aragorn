@@ -4,9 +4,9 @@ const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || '';
 
 function getNetworkHeader(): Record<string, string> {
   if (typeof window === 'undefined') return {};
-  const network = localStorage.getItem('aldor_network');
+  const network = localStorage.getItem('aragorn_network');
   if (network === 'mainnet' || network === 'devnet') {
-    return { 'X-Aldor-Network': network };
+    return { 'X-Aragorn-Network': network };
   }
   return {};
 }
@@ -60,10 +60,6 @@ export async function getRecentTransactions(): Promise<{ items: RecentTransactio
   return apiFetch('/api/analytics/recent-transactions');
 }
 
-export async function getPalmUsdCirculation(): Promise<{ totalSupply: number }> {
-  return apiFetch('/api/analytics/palmusd-circulation');
-}
-
 export interface PaymentActivity {
   recentPayments: Array<{
     hash: string;
@@ -79,14 +75,11 @@ export interface PaymentActivity {
     totalPayments: number;
     uniqueAgents: number;
     totalVolumeSol: string;
-    totalVolumePalm: string;
-    palmVolumeUsd: number;
   };
   agentBalances: Array<{
     agent: string;
     address: string;
     solBalance: string;
-    palmBalance: string;
   }>;
   velocity: number[];
 }
@@ -95,7 +88,7 @@ export async function getPaymentActivity(): Promise<PaymentActivity> {
   return apiFetch('/api/analytics/payment-activity');
 }
 
-export async function getPaymentConfig(): Promise<{ paymentMode: string; network: string; palmUsdMint: string; umbraEnabled: boolean }> {
+export async function getPaymentConfig(): Promise<{ paymentMode: string; network: string; umbraEnabled: boolean }> {
   return apiFetch('/api/payment/config');
 }
 
@@ -170,7 +163,7 @@ export async function offRampEarnings(agentAddress: string, amountStablecoin: nu
 export function createEventSource(sessionId: string): EventSource {
   const url = new URL(`${API_BASE}/api/agent/events`, typeof window !== 'undefined' ? window.location.href : undefined);
   url.searchParams.set('session', sessionId);
-  const network = typeof window !== 'undefined' ? localStorage.getItem('aldor_network') : null;
+  const network = typeof window !== 'undefined' ? localStorage.getItem('aragorn_network') : null;
   if (network === 'mainnet' || network === 'devnet') {
     url.searchParams.set('network', network);
   }

@@ -8,5 +8,5 @@ const app = createApp();
 const port = Number(process.env.PORT ?? 3002);
 
 app.listen(port, () => {
-  console.log(`Aldor server listening on ${port} (${serverConfig.serverBaseUrl})`);
+  console.log(`Aragorn server listening on ${port} (${serverConfig.serverBaseUrl})`);
 });

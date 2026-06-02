@@ -17,12 +17,6 @@ interface RegistryLikeAgent {
   owner?: string;
 }
 
-export interface AgentBalanceInfo {
-  address: string;
-  stablecoinBalance: string;
-  raw?: unknown;
-}
-
 export interface RecentTxInfo {
   address: string;
   hash: string;
@@ -71,33 +65,6 @@ async function covalentGet(path: string, networkHint?: string, env: NodeJS.Proce
   return json;
 }
 
-export async function getStablecoinBalanceForAddress(
-  address: string,
-  stablecoinMint: string,
-  networkHint?: string,
-  env: NodeJS.ProcessEnv = process.env,
-): Promise<AgentBalanceInfo> {
-  if (!covalentEnabled(env)) {
-    return { address, stablecoinBalance: '0' };
-  }
-
-  const chain = covalentChain(networkHint, env);
-  const payload = await covalentGet(`/${chain}/address/${address}/balances_v2/`, networkHint, env);
-  const items = payload?.data?.items;
-  const match = Array.isArray(items)
-    ? items.find((item: any) => {
-        const contract = String(item?.contract_address ?? '');
-        return contract === stablecoinMint;
-      })
-    : undefined;
-
-  return {
-    address,
-    stablecoinBalance: String(match?.balance ?? '0'),
-    raw: match ?? null,
-  };
-}
-
 export async function getRecentTransactions(
   addresses: string[],
   networkHint?: string,
@@ -135,7 +102,6 @@ export async function getRecentTransactions(
 }
 
 export async function getAgentRegistryEnriched(
-  stablecoinMint: string,
   networkHint?: string,
   env: NodeJS.ProcessEnv = process.env,
 ): Promise<Array<Record<string, unknown>>> {
@@ -148,17 +114,16 @@ export async function getAgentRegistryEnriched(
     isRecursive: agent.recursive,
     isActive: true,
     capabilities: [agent.category],
-  })), stablecoinMint, networkHint, env);
+  })), networkHint, env);
 }
 
 export async function enrichAgentsWithBalances(
   agents: RegistryLikeAgent[],
-  stablecoinMint: string,
   networkHint?: string,
   env: NodeJS.ProcessEnv = process.env,
 ): Promise<Array<Record<string, unknown>>> {
   const walletMap = (() => {
-    const raw = env.ALDOR_AGENT_WALLET_MAP;
+    const raw = env.ARAGORN_AGENT_WALLET_MAP;
     if (!raw) return {} as Record<string, string>;
     try {
       return JSON.parse(raw) as Record<string, string>;
@@ -167,19 +132,8 @@ export async function enrichAgentsWithBalances(
     }
   })();
 
-  const balances = await Promise.all(
-    agents.map((agent) => {
-      const address = agent.walletAddress ?? agent.owner ?? walletMap[agent.snsDomain] ?? agent.snsDomain;
-      return getStablecoinBalanceForAddress(address, stablecoinMint, networkHint, env).catch(() => ({
-        address,
-        stablecoinBalance: '0',
-      }));
-    }),
-  );
-
-    return agents.map((agent) => {
+  return agents.map((agent) => {
     const address = agent.walletAddress ?? agent.owner ?? walletMap[agent.snsDomain] ?? agent.snsDomain;
-    const balance = balances.find((b) => b.address === address);
     return {
       snsDomain: agent.snsDomain,
       name: agent.name ?? '',
@@ -191,9 +145,8 @@ export async function enrichAgentsWithBalances(
       isActive: agent.isActive ?? true,
       capabilities: agent.capabilities ?? (agent.category ? [agent.category] : []),
       walletAddress: address,
-      stablecoinBalance: balance?.stablecoinBalance ?? '0',
       owner: agent.owner,
-      token: (agent as any).token ?? 'PALM_USD',
+      token: (agent as any).token ?? 'SOL',
     };
   });
 }

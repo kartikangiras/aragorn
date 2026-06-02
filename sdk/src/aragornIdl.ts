@@ -1,10 +1,10 @@
 const idl = {
   address: "2km5TwkgiaDWfAyojtntyj5Djuz6ivcBVvWR8SSR4DQj",
   metadata: {
-    name: "aldor",
+    name: "aragorn",
     version: "0.1.0",
     spec: "0.1.0",
-    description: "Aldor agent economy program",
+    description: "Aragorn agent economy program",
   },
   instructions: [
     {

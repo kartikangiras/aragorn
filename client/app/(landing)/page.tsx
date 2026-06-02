@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { useWallet } from '@solana/wallet-adapter-react';
 import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
-import AldorLogo from '@/components/AldorLogo';
+import AragornLogo from '@/components/AragornLogo';
 import ClientOnly from '@/components/ClientOnly';
 
 const WalletMultiButton = dynamic(
@@ -38,7 +38,7 @@ const FEATURES = [
   { icon: Cpu, title: 'QVAC Local Embeddings', desc: 'On-device vector similarity search routes queries to the optimal agent without cloud latency or API costs.', accent: '#c4b5fd' },
 ];
 
-const MARQUEE_ITEMS = ['Solana', 'x402 Protocol', 'Umbra SDK', 'Covalent', 'Bonfida SNS', 'QVAC', 'Palm USD', 'Anchor', 'Agent Orchestration', 'Privacy Layer'];
+const MARQUEE_ITEMS = ['Solana', 'x402 Protocol', 'Umbra SDK', 'Covalent', 'Bonfida SNS', 'QVAC', 'Anchor', 'Agent Orchestration', 'Privacy Layer'];
 
 const STATS = [
   { label: 'Total Value Locked', value: '$16.9M', suffix: '' },
@@ -83,7 +83,7 @@ function WalletConnectButton() {
   const { publicKey, connected } = useWallet();
   if (connected && publicKey) {
     return (
-      <Button asChild size="sm" className="gap-2 bg-aldor-emerald hover:bg-aldor-emerald-dim text-white border-0 rounded-full px-5 transition-all duration-300 hover:shadow-[0_0_20px_rgba(129,140,248,0.3)]">
+      <Button asChild size="sm" className="gap-2 bg-aragorn-emerald hover:bg-aragorn-emerald-dim text-white border-0 rounded-full px-5 transition-all duration-300 hover:shadow-[0_0_20px_rgba(129,140,248,0.3)]">
         <Link href="/home">
           <Wallet size={14} /> Launch Dashboard
         </Link>
@@ -103,8 +103,8 @@ export default function LandingPage() {
       {/* ─── NAV ─────────────────────────────────── */}
       <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50 flex items-center justify-between gap-6 px-5 py-2.5 rounded-full" style={{ background: 'rgba(13,13,13,0.7)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.08)', minWidth: 340, maxWidth: 680 }}>
         <Link href="/" className="flex items-center gap-2">
-          <AldorLogo size={28} />
-          <span className="font-bold text-sm tracking-tight">Aldor</span>
+          <AragornLogo size={28} />
+          <span className="font-bold text-sm tracking-tight">Aragorn</span>
         </Link>
         <div className="hidden sm:flex items-center gap-5 text-xs text-white/40">
           <Link href="/docs" className="hover:text-white/80 transition-colors">Docs</Link>
@@ -181,7 +181,7 @@ export default function LandingPage() {
         <div className="absolute inset-0 bg-grid opacity-20" />
         <div className="max-w-6xl mx-auto relative">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0} className="text-center mb-16">
-            <p className="text-xs uppercase tracking-[0.2em] text-aldor-emerald mb-4 font-medium">Core Infrastructure</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-aragorn-emerald mb-4 font-medium">Core Infrastructure</p>
             <h2 className="text-3xl md:text-5xl font-bold mb-4 text-white/90">Built to handle complexity</h2>
             <p className="text-white/30 max-w-xl mx-auto font-light">A complete stack for autonomous agent economies — from local embeddings to on-chain settlement.</p>
           </motion.div>
@@ -209,7 +209,7 @@ export default function LandingPage() {
       <section id="how-it-works" className="py-28 px-6" style={{ background: 'rgba(255,255,255,0.01)' }}>
         <div className="max-w-5xl mx-auto">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0} className="text-center mb-16">
-            <p className="text-xs uppercase tracking-[0.2em] text-aldor-purple mb-4 font-medium">Getting Started</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-aragorn-purple mb-4 font-medium">Getting Started</p>
             <h2 className="text-3xl md:text-5xl font-bold mb-4 text-white/90">How It Works</h2>
             <p className="text-white/30">Three steps to autonomous economic execution.</p>
           </motion.div>
@@ -249,7 +249,7 @@ export default function LandingPage() {
       <section className="py-24 px-6" style={{ background: 'rgba(255,255,255,0.01)' }}>
         <div className="max-w-4xl mx-auto">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0} className="text-center mb-12">
-            <p className="text-xs uppercase tracking-[0.2em] text-aldor-cyan mb-4 font-medium">Live Preview</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-aragorn-cyan mb-4 font-medium">Live Preview</p>
             <h2 className="text-3xl md:text-4xl font-bold text-white/90">See agents in action</h2>
           </motion.div>
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={1}>
@@ -259,11 +259,11 @@ export default function LandingPage() {
                 <span className="ml-2 text-[10px] text-white/20 font-mono">agent-terminal</span>
               </div>
               <div className="p-6 font-mono text-xs space-y-3">
-                <div className="text-white/30"><span className="text-aldor-emerald">$</span> aldor query &quot;Analyze yield farming strategies on Solana&quot;</div>
+                <div className="text-white/30"><span className="text-aragorn-emerald">$</span> aragorn query &quot;Analyze yield farming strategies on Solana&quot;</div>
                 <div className="text-white/20">→ Planning execution...</div>
-                <div className="text-white/20">→ Hiring <span className="text-aldor-purple">DeFiAnalyst</span>, <span className="text-aldor-purple">YieldOptimizer</span></div>
-                <div className="text-white/20">→ x402 payment: <span className="text-aldor-cyan">0.002 SOL</span> per agent</div>
-                <div className="text-white/20">→ Privacy layer: <span className="text-aldor-emerald">Umbra stealth active</span></div>
+                <div className="text-white/20">→ Hiring <span className="text-aragorn-purple">DeFiAnalyst</span>, <span className="text-aragorn-purple">YieldOptimizer</span></div>
+                <div className="text-white/20">→ x402 payment: <span className="text-aragorn-cyan">0.002 SOL</span> per agent</div>
+                <div className="text-white/20">→ Privacy layer: <span className="text-aragorn-emerald">Umbra stealth active</span></div>
                 <div className="text-white/25 mt-2 pl-4" style={{ borderLeft: '2px solid rgba(129,140,248,0.2)' }}>Analysis complete. Top strategy: Marinade Finance mSOL staking at 7.2% APY with auto-compounding via Tulip Protocol.</div>
                 <div className="text-white/15">✓ Settled on-chain · 420ms · 2 agents hired</div>
               </div>
@@ -302,8 +302,8 @@ export default function LandingPage() {
           <div className="grid md:grid-cols-4 gap-8 mb-10">
             <div>
               <Link href="/" className="flex items-center gap-2 mb-3">
-                <AldorLogo size={24} />
-                <span className="font-bold text-sm">Aldor</span>
+                <AragornLogo size={24} />
+                <span className="font-bold text-sm">Aragorn</span>
               </Link>
               <p className="text-xs text-white/20 leading-relaxed">Autonomous AI economic infrastructure built on Solana.</p>
             </div>
@@ -333,7 +333,7 @@ export default function LandingPage() {
             </div>
           </div>
           <div className="pt-6 text-center text-[11px] text-white/15" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-            &copy; 2026 Aldor Network. All rights reserved. Built on Solana.
+            &copy; 2026 Aragorn Network. All rights reserved. Built on Solana.
           </div>
         </div>
       </footer>

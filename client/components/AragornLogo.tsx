@@ -1,15 +1,15 @@
 import Image from 'next/image';
 
-interface AldorLogoProps {
+interface AragornLogoProps {
   className?: string;
   size?: number;
 }
 
-export default function AldorLogo({ className = '', size = 40 }: AldorLogoProps) {
+export default function AragornLogo({ className = '', size = 40 }: AragornLogoProps) {
   return (
     <Image
       src="/logo.png"
-      alt="Aldor"
+      alt="Aragorn"
       width={size}
       height={size}
       className={`rounded-lg object-contain ${className}`}

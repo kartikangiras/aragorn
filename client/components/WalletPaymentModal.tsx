@@ -23,39 +23,33 @@ interface WalletPaymentModalProps {
   onChooseMethod: (requestId: string, method: 'wallet' | 'dodo') => void;
   walletConnected: boolean;
   solBalance?: number | null;
-  palmBalance?: number | null;
 }
 
 function formatAmount(challenge: PendingPayment['challenge']): string {
   const amount = Number(challenge.amount);
-  if (challenge.asset === 'SOL') {
-    return `${(amount / 1_000_000_000).toFixed(6)} SOL`;
-  }
-  return `${(amount / 1_000_000).toFixed(4)} Palm USD`;
+  return `${(amount / 1_000_000_000).toFixed(6)} SOL`;
 }
 
-function formatAssetLabel(challenge: PendingPayment['challenge']): string {
-  if (challenge.asset === 'SOL') return 'SOL';
-  return 'PALM_USD';
+function formatAssetLabel(_challenge: PendingPayment['challenge']): string {
+  return 'SOL';
 }
 
-function TokenBadge({ challenge }: { challenge: PendingPayment['challenge'] }) {
-  const isSol = challenge.asset === 'SOL';
+function TokenBadge() {
   return (
     <span
       style={{
         fontSize: 9,
         padding: '2px 6px',
         borderRadius: 4,
-        background: isSol ? 'rgba(251,191,36,0.1)' : 'rgba(0,255,148,0.1)',
-        border: `1px solid ${isSol ? 'rgba(251,191,36,0.3)' : 'rgba(0,255,148,0.3)'}`,
-        color: isSol ? '#fbbf24' : '#00ff94',
+        background: 'rgba(251,191,36,0.1)',
+        border: '1px solid rgba(251,191,36,0.3)',
+        color: '#fbbf24',
         fontWeight: 700,
         textTransform: 'uppercase',
         letterSpacing: '0.05em',
       }}
     >
-      {isSol ? 'SOL' : 'PALM USD'}
+      SOL
     </span>
   );
 }
@@ -67,7 +61,6 @@ function PaymentCard({
   onChooseMethod,
   walletConnected,
   solBalance,
-  palmBalance,
 }: {
   payment: PendingPayment;
   onApprove: (id: string) => void;
@@ -75,7 +68,6 @@ function PaymentCard({
   onChooseMethod: (id: string, method: 'wallet' | 'dodo') => void;
   walletConnected: boolean;
   solBalance?: number | null;
-  palmBalance?: number | null;
 }) {
   const isSigning = payment.status === 'signing';
   const isSubmitted = payment.status === 'submitted';
@@ -152,12 +144,9 @@ function PaymentCard({
   };
 
   const chosen = payment.chosenMethod;
-  const isSol = payment.challenge.asset === 'SOL';
-  const userBalance = isSol ? solBalance : palmBalance;
-  const requiredAmount =
-    Number(payment.challenge.amount) / (isSol ? 1_000_000_000 : 1_000_000);
+  const requiredAmount = Number(payment.challenge.amount) / 1_000_000_000;
   const hasEnoughBalance =
-    userBalance !== null && userBalance !== undefined && userBalance >= requiredAmount;
+    solBalance !== null && solBalance !== undefined && solBalance >= requiredAmount;
 
   return (
     <div
@@ -232,7 +221,7 @@ function PaymentCard({
           {formatAmount(payment.challenge)}
         </span>
         <span style={{ marginLeft: 'auto' }}>
-          <TokenBadge challenge={payment.challenge} />
+          <TokenBadge />
         </span>
       </div>
 
@@ -257,11 +246,7 @@ function PaymentCard({
             }}
           >
             Your balance:{' '}
-            <strong>
-              {isSol
-                ? `${(solBalance ?? 0).toFixed(4)} SOL`
-                : `${(palmBalance ?? 0).toFixed(2)} Palm USD`}
-            </strong>{' '}
+            <strong>{`${(solBalance ?? 0).toFixed(4)} SOL`}</strong>{' '}
             {hasEnoughBalance ? '(sufficient)' : '(insufficient)'}
           </span>
         </div>
@@ -338,7 +323,7 @@ function PaymentCard({
                   textTransform: 'none',
                 }}
               >
-                {isSol ? 'SOL' : 'Palm USD'}
+                SOL
               </span>
             </button>
             <button
@@ -597,7 +582,6 @@ export default function WalletPaymentModal({
   onChooseMethod,
   walletConnected,
   solBalance,
-  palmBalance,
 }: WalletPaymentModalProps) {
   const activePayments = payments.filter((p) => p.status !== 'submitted');
   if (activePayments.length === 0) return null;
@@ -672,7 +656,6 @@ export default function WalletPaymentModal({
             onChooseMethod={onChooseMethod}
             walletConnected={walletConnected}
             solBalance={solBalance}
-            palmBalance={palmBalance}
           />
         ))}
       </div>

@@ -1,5 +1,5 @@
 [workspace]
-members = ["programs/aldor"]
+members = ["programs/aragorn"]
 resolver = "2"
 
 [profile.release]

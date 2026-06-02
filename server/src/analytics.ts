@@ -1,5 +1,4 @@
 import { Connection, PublicKey } from '@solana/web3.js';
-import { getAssociatedTokenAddressSync, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { serverConfig } from './config.js';
 import { AGENTS } from './agents.js';
 import { getPaymentStats, listPayments } from './ledger.js';
@@ -20,14 +19,11 @@ export interface PaymentActivity {
     totalPayments: number;
     uniqueAgents: number;
     totalVolumeSol: string;
-    totalVolumePalm: string;
-    palmVolumeUsd: number;
   };
   agentBalances: Array<{
     agent: string;
     address: string;
     solBalance: string;
-    palmBalance: string;
   }>;
   velocity: number[];
 }
@@ -39,7 +35,7 @@ function getConnection(): Connection {
 export async function fetchPaymentActivity(): Promise<PaymentActivity> {
   const connection = getConnection();
   const walletMap = (() => {
-    const raw = process.env.ALDOR_AGENT_WALLET_MAP;
+    const raw = process.env.ARAGORN_AGENT_WALLET_MAP;
     if (!raw) return {} as Record<string, string>;
     try {
       return JSON.parse(raw) as Record<string, string>;
@@ -63,7 +59,6 @@ export async function fetchPaymentActivity(): Promise<PaymentActivity> {
 
   // 2. Stats from real payment data
   const stats = getPaymentStats();
-  const palmVolumeUsd = Number(stats.totalsByToken.PALM_USD) / 1_000_000;
 
   // 3. Agent balances from Solana RPC
   const agentBalances = await Promise.all(
@@ -74,7 +69,6 @@ export async function fetchPaymentActivity(): Promise<PaymentActivity> {
           agent: agent.name,
           address: 'N/A',
           solBalance: '0',
-          palmBalance: '0',
         };
       }
 
@@ -85,30 +79,16 @@ export async function fetchPaymentActivity(): Promise<PaymentActivity> {
         const solBalanceLamports = await connection.getBalance(pubkey);
         const solBalance = (solBalanceLamports / 1_000_000_000).toFixed(4);
 
-        // PALM_USD token balance
-        let palmBalance = '0';
-        try {
-          const mint = new PublicKey(serverConfig.palmUsdMint);
-          const ata = getAssociatedTokenAddressSync(mint, pubkey);
-          const tokenAccount = await connection.getTokenAccountBalance(ata);
-          palmBalance = tokenAccount.value.uiAmountString ?? '0';
-        } catch {
-          // ATA doesn't exist or no balance
-          palmBalance = '0';
-        }
-
         return {
           agent: agent.name,
           address,
           solBalance,
-          palmBalance,
         };
       } catch {
         return {
           agent: agent.name,
           address,
           solBalance: '0',
-          palmBalance: '0',
         };
       }
     }),
@@ -132,8 +112,6 @@ export async function fetchPaymentActivity(): Promise<PaymentActivity> {
       totalPayments: stats.totalPayments,
       uniqueAgents: stats.uniqueAgents,
       totalVolumeSol: stats.totalsByToken.SOL,
-      totalVolumePalm: stats.totalsByToken.PALM_USD,
-      palmVolumeUsd,
     },
     agentBalances,
     velocity: buckets,

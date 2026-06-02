@@ -1,14 +1,14 @@
-# Aldor
+# Aragorn
 
 > **Sovereign Autonomous Agentic Orchestrator for Solana**
 
-Aldor is a production-grade autonomous agent marketplace built on Solana where users hire AI-powered agent specialists using x402 micropayments. Every agent is registered on-chain via SNS domains, paid through Umbra stealth addresses, and selected through sovereign on-device embeddings (QVAC) or deterministic routing.
+Aragorn is a production-grade autonomous agent marketplace built on Solana where users hire AI-powered agent specialists using x402 micropayments. Every agent is registered on-chain via SNS domains, paid through Umbra stealth addresses, and selected through sovereign on-device embeddings (QVAC) or deterministic routing.
 
 ---
 
 ## Table of Contents
 
-- [What is Aldor?](#what-is-aldor)
+- [What is Aragorn?](#what-is-aragorn)
 - [The Problem](#the-problem)
 - [The Solution](#the-solution)
 - [Why Solana?](#why-solana)
@@ -26,12 +26,12 @@ Aldor is a production-grade autonomous agent marketplace built on Solana where u
 
 ---
 
-## What is Aldor?
+## What is Aragorn?
 
-Aldor is an **autonomous agent orchestration platform** that enables:
+Aragorn is an **autonomous agent orchestration platform** that enables:
 
 - **Hire AI agents on-demand** — 18 specialized agents from weather lookup to smart contract audits
-- **Pay per request** — x402 micropayments in SOL or Palm USD (0.0001–0.015 USD per request)
+- **Pay per request** — x402 micropayments in SOL (0.001–0.02 SOL per request)
 - **Privacy by default** — All payments route through Umbra stealth addresses
 - **Sovereign routing** — Local QVAC embeddings match queries to agents without external LLM calls
 - **Real-time observability** — Live execution trace with session IDs, tx fingerprints, and stealth hashes
@@ -56,16 +56,16 @@ Current AI agent platforms suffer from:
 
 ## The Solution
 
-Aldor solves these with a **single-shot, privacy-preserving, on-chain agent economy**:
+Aragorn solves these with a **single-shot, privacy-preserving, on-chain agent economy**:
 
-| Problem | Aldor Solution |
+| Problem | Aragorn Solution |
 |---------|---------------|
-| No payments | x402 protocol: per-request micropayments in SOL or Palm USD |
+| No payments | x402 protocol: per-request micropayments in SOL |
 | No privacy | Umbra stealth addresses hide recipient + amount on-chain |
 | Centralized routing | QVAC local embeddings run 100% on-device |
 | No reputation | On-chain registry with reputation scores per agent |
 | High latency | Single-shot agents: 1 payment → 1 LLM call → 1 response |
-| Fiat friction | Dodo Payments on-ramp: card → Palm USD in 30 seconds |
+| Fiat friction | Dodo Payments on-ramp: card → SOL in 30 seconds |
 
 ---
 
@@ -75,11 +75,11 @@ Solana is the only chain that makes this viable:
 
 - **$0.00025 per transaction** — micropayments of $0.001 are actually profitable
 - **400ms finality** — user waits <2 seconds from query to result
-- **SNS domains** — human-readable agent IDs (`weather.aldor.sol`) with on-chain resolution
-- **SPL token standard** — Palm USD stablecoin for denominated agent pricing
+- **SNS domains** — human-readable agent IDs (`weather.aragorn.sol`) with on-chain resolution
+- **SPL token standard** — Native SOL and token program support for any asset
 - **Rich ecosystem** — Umbra, Bonfida, Jupiter, Helius all production-ready
 
-Other chains charge $0.50–$2.00 per transaction. At Aldor's price point ($0.001–$0.015 per request), only Solana's sub-cent fees work.
+Other chains charge $0.50–$2.00 per transaction. At Aragorn's price point ($0.001–$0.015 per request), only Solana's sub-cent fees work.
 
 ---
 
@@ -127,7 +127,7 @@ All agent payments route through Umbra stealth addresses:
 ### 2. Bonfida SNS
 Agents are identified by `.sol` domains:
 ```
-weather.aldor.sol → Bonfida SNS → Solana Pubkey → Payment routing
+weather.aragorn.sol → Bonfida SNS → Solana Pubkey → Payment routing
 ```
 This lets agents rotate wallets without changing their public identifier.
 
@@ -140,23 +140,13 @@ Local on-device vector similarity for agent routing:
 
 ### 4. Covalent Analytics
 On-chain data indexing for:
-- Agent wallet balances (SOL + Palm USD)
+- Agent wallet balances (SOL)
 - Recent transaction history
 - Payment velocity graphs (tx per 5-minute bucket)
 
-### 5. Palm USD SPL Token
-Aldor uses **Palm USD** as its primary stablecoin for agent payments:
-
-- **Devnet**: We created a custom Palm USD SPL token (`HU59RWU1di1ez7XD8awcb9WJD1hfHNTYcv67nBDbboxJ`) because no official devnet mint existed. This allows testing the full payment flow without mainnet costs.
-- **Mainnet**: Uses the official Palm USD mint (`CZzgUBvxaMLwMhVSLgqJn3npmxoTo6nzMNQPAnwtHF3s`)
-- **Pricing**: All Palm USD-denominated agents use `priceAtomic` values that are divided by `1_000_000` to get human-readable amounts
-- **Token**: 6 decimals, standard SPL token implementation
-
-> **Note**: The devnet Palm USD is a mock token for testing. In production, always use the mainnet mint or a verified stablecoin.
-
-### 6. Dodo Payments
+### 5. Dodo Payments
 Fiat on-ramp integration:
-- Card / Apple Pay / Google Pay → Palm USD
+- Card / Apple Pay / Google Pay → SOL
 - Same-tab redirect with success/cancel banners
 - Webhook support for payment confirmations
 
@@ -196,24 +186,24 @@ User Wallet
 
 | Agent | Domain | Price | Category | Description |
 |-------|--------|-------|----------|-------------|
-| WeatherBot | weather.aldor.sol | 0.001 SOL | Utility | Real-time weather lookup |
-| Summarizer | summarizer.aldor.sol | 0.0001 Palm | NLP | Text summarization |
-| MathSolver | math.aldor.sol | 0.0003 Palm | Utility | Step-by-step math solver |
-| SentimentAI | sentiment.aldor.sol | 0.0001 Palm | NLP | Sentiment analysis |
-| CodeExplainer | code-explainer.aldor.sol | 0.0004 Palm | Code | Explain code in plain English |
-| TranslateBot | translate.aldor.sol | 0.0003 Palm | NLP | Multi-language translation |
-| **DeepResearch** | research.aldor.sol | **0.008 Palm** | Research | Deep topic analysis |
-| **CodingAgent** | coding.aldor.sol | **0.015 Palm** | Code | Code generation + review |
-| SovereignSpecialist | sovereign.aldor.sol | 0.0025 Palm | QVAC | Local QVAC inference |
-| DataAnalyst | data.aldor.sol | 0.0008 Palm | Analytics | Data analysis + insights |
-| ContractAuditor | audit.aldor.sol | 0.0015 Palm | Security | Smart contract audit |
-| DeFiStrategist | defi.aldor.sol | 0.0012 Palm | Finance | Yield farming strategies |
-| ImageGenerator | image.aldor.sol | 0.002 Palm | Creative | Image prompt generation |
-| MarketOracle | oracle.aldor.sol | 0.005 SOL | Finance | Market data + signals |
-| LegalAdvisor | legal.aldor.sol | 0.003 Palm | Legal | Contract review |
-| SocialMediaBot | social.aldor.sol | 0.0006 Palm | Marketing | Content generation |
-| TradingBot | trading.aldor.sol | 0.005 Palm | Finance | Trading signals |
-| MedicalAdvisor | medical.aldor.sol | 0.0018 Palm | Health | Symptom analysis |
+| WeatherBot | weather.aragorn.sol | 0.001 SOL | Utility | Real-time weather lookup |
+| Summarizer | summarizer.aragorn.sol | 0.001 SOL | NLP | Text summarization |
+| MathSolver | math.aragorn.sol | 0.0015 SOL | Utility | Step-by-step math solver |
+| SentimentAI | sentiment.aragorn.sol | 0.001 SOL | NLP | Sentiment analysis |
+| CodeExplainer | code-explainer.aragorn.sol | 0.002 SOL | Code | Explain code in plain English |
+| TranslateBot | translate.aragorn.sol | 0.0015 SOL | NLP | Multi-language translation |
+| **DeepResearch** | research.aragorn.sol | **0.01 SOL** | Research | Deep topic analysis |
+| **CodingAgent** | coding.aragorn.sol | **0.02 SOL** | Code | Code generation + review |
+| SovereignSpecialist | sovereign.aragorn.sol | 0.003 SOL | QVAC | Local QVAC inference |
+| DataAnalyst | data.aragorn.sol | 0.0025 SOL | Analytics | Data analysis + insights |
+| ContractAuditor | audit.aragorn.sol | 0.005 SOL | Security | Smart contract audit |
+| DeFiStrategist | defi.aragorn.sol | 0.004 SOL | Finance | Yield farming strategies |
+| ImageGenerator | image.aragorn.sol | 0.005 SOL | Creative | Image prompt generation |
+| MarketOracle | oracle.aragorn.sol | 0.005 SOL | Finance | Market data + signals |
+| LegalAdvisor | legal.aragorn.sol | 0.006 SOL | Legal | Contract review |
+| SocialMediaBot | social.aragorn.sol | 0.002 SOL | Marketing | Content generation |
+| TradingBot | trading.aragorn.sol | 0.008 SOL | Finance | Trading signals |
+| MedicalAdvisor | medical.aragorn.sol | 0.004 SOL | Health | Symptom analysis |
 
 **Complex agents** (DeepResearch, CodingAgent) charge higher prices but remain single-shot.
 
@@ -230,7 +220,7 @@ User Wallet
 ### Clone & Install
 ```bash
 git clone <repo-url>
-cd aldor
+cd aragorn
 
 # Install root dependencies (server + shared)
 npm install
@@ -245,19 +235,17 @@ Create `server/.env`:
 
 ```bash
 # ── Solana Blockchain ──
-ALDOR_PROGRAM_ID=2km5TwkgiaDWfAyojtntyj5Djuz6ivcBVvWR8SSR4DQj
+ARAGORN_PROGRAM_ID=2km5TwkgiaDWfAyojtntyj5Djuz6ivcBVvWR8SSR4DQj
 SOLANA_CLUSTER=devnet
 SOLANA_RPC_URL=https://devnet.helius-rpc.com/?api-key=YOUR_KEY
-PALM_USD_MINT_DEVNET=HU59RWU1di1ez7XD8awcb9WJD1hfHNTYcv67nBDbboxJ
-PALM_USD_MINT_MAINNET=CZzgUBvxaMLwMhVSLgqJn3npmxoTo6nzMNQPAnwtHF3s
 SERVER_BASE_URL=http://127.0.0.1:3002
-ALDOR_PAYMENT_MODE=wallet
+ARAGORN_PAYMENT_MODE=wallet
 MOCK_PAYMENTS=false
 UMBRA_ENABLED=true
 UMBRA_SDK_MODULE=@umbra-privacy/sdk
 
 # Payer secret (dev only — server signs payments in server mode)
-ALDOR_PAYER_SECRET_KEY=[your-secret-array]
+ARAGORN_PAYER_SECRET_KEY=[your-secret-array]
 
 # ── LLM Providers ──
 GROQ_API_KEY=gsk_...
@@ -268,9 +256,9 @@ COVALENT_API_KEY=cqt_...
 DODO_API_KEY=your-dodo-key
 
 # ── Agent Wallets ──
-ALDOR_AGENT_WALLET_MAP={"weather.aldor.sol":"A37t...",...}
-ALDOR_UMBRA_STEALTH_MAP={"weather.aldor.sol":"A37t...",...}
-ALDOR_UMBRA_SECRET_MAP={"weather.aldor.sol":"5JbC...",...}
+ARAGORN_AGENT_WALLET_MAP={"weather.aragorn.sol":"A37t...",...}
+ARAGORN_UMBRA_STEALTH_MAP={"weather.aragorn.sol":"A37t...",...}
+ARAGORN_UMBRA_SECRET_MAP={"weather.aragorn.sol":"5JbC...",...}
 
 # ── QVAC (optional) ──
 QVAC_EMBED_ENABLED=true
@@ -280,14 +268,13 @@ QVAC_EMBED_MODEL_SRC=/path/to/nomic-embed-text-v1.5.Q4_K_M.gguf
 > **⚠️ Security Note — What to keep secret vs. what is safe to expose:**
 >
 > **🔒 NEVER expose these (keep in `.env` only):**
-> - `ALDOR_PAYER_SECRET_KEY` — This is a private key. If leaked, anyone can drain the payer wallet.
-> - `ALDOR_UMBRA_SECRET_MAP` — Contains Umbra stealth private keys. Leaking this breaks privacy guarantees.
+> - `ARAGORN_PAYER_SECRET_KEY` — This is a private key. If leaked, anyone can drain the payer wallet.
+> - `ARAGORN_UMBRA_SECRET_MAP` — Contains Umbra stealth private keys. Leaking this breaks privacy guarantees.
 > - `GROQ_API_KEY`, `GEMINI_API_KEY`, `COVALENT_API_KEY`, `DODO_API_KEY` — API keys with billing attached.
 >
 > **✅ SAFE to expose (public information):**
-> - `ALDOR_PROGRAM_ID` — On-chain program ID is public on the blockchain.
-> - `PALM_USD_MINT_DEVNET` / `PALM_USD_MINT_MAINNET` — Token mint addresses are public.
-> - `ALDOR_AGENT_WALLET_MAP` / `ALDOR_UMBRA_STEALTH_MAP` — Agent wallet addresses are public (they receive payments).
+> - `ARAGORN_PROGRAM_ID` — On-chain program ID is public on the blockchain.
+> - `ARAGORN_AGENT_WALLET_MAP` / `ARAGORN_UMBRA_STEALTH_MAP` — Agent wallet addresses are public (they receive payments).
 > - `SOLANA_CLUSTER`, `SERVER_BASE_URL`, `UMBRA_ENABLED` — Configuration flags, not secrets.
 >
 > **Recommendation**: Use a secrets manager (e.g., Vercel Env, AWS Secrets Manager, or 1Password) in production. Never commit `.env` to git.
@@ -334,23 +321,18 @@ vercel --prod
 
 ### Key deployment notes:
 - Set `SERVER_BASE_URL` to your production backend URL
-- Set `ALDOR_PAYMENT_MODE=wallet` for production (users sign their own payments)
+- Set `ARAGORN_PAYMENT_MODE=wallet` for production (users sign their own payments)
 - Set `MOCK_PAYMENTS=false` for real on-chain settlements
-- Ensure `ALDOR_AGENT_WALLET_MAP` points to real agent wallets
+- Ensure `ARAGORN_AGENT_WALLET_MAP` points to real agent wallets
 
 ---
 
 ## Usage Guide
 
 ### 1. Connect Wallet
-Click the wallet button in the sidebar. Aldor supports Phantom, Solflare, Backpack, and any Wallet Standard adapter.
+Click the wallet button in the sidebar. Aragorn supports Phantom, Solflare, Backpack, and any Wallet Standard adapter.
 
-### 2. Fund with Palm USD
-- Click **Fund Wallet** → Dodo on-ramp
-- Pay with card / Apple Pay / Google Pay
-- Return to Aldor with auto-refreshed balance
-
-### 3. Send a Query
+### 2. Send a Query
 Type any request in the Agent Terminal:
 ```
 "Research the latest Solana ecosystem trends"
@@ -359,20 +341,20 @@ Type any request in the Agent Terminal:
 "What is the weather in San Francisco?"
 ```
 
-### 4. Observe Execution
+### 3. Observe Execution
 The terminal shows:
 - Your query
 - Orchestrator planning (internal)
 - **Final result only** (markdown stripped for readability)
 
-### 5. Monitor Privacy
+### 4. Monitor Privacy
 Navigate to **Privacy Integration** to see:
 - Shielded tx count
-- Total Palm USD volume
+- Total SOL volume
 - Stealth address fingerprints
 - Per-tx stealth hashes
 
-### 6. Browse Analytics
+### 5. Browse Analytics
 - **Live Analytics** — Covalent-powered volume charts
 - **Economic Topology** — Agent balance network + platform architecture diagram
 - **Execution Trace** — Real-time SSE event stream
@@ -382,22 +364,22 @@ Navigate to **Privacy Integration** to see:
 ## Benefits for the Solana Community
 
 ### 1. Proves Solana is the Best Chain for AI Payments
-Aldor demonstrates that Solana's sub-cent fees make **per-request micropayments viable**. At $0.001 per request, agents can charge per-use instead of monthly subscriptions. This is impossible on Ethereum ($2–$50 per tx) or even L2s ($0.10–$0.50).
+Aragorn demonstrates that Solana's sub-cent fees make **per-request micropayments viable**. At $0.001 per request, agents can charge per-use instead of monthly subscriptions. This is impossible on Ethereum ($2–$50 per tx) or even L2s ($0.10–$0.50).
 
 ### 2. Privacy-Preserving AI Economy
-By integrating Umbra, Aldor shows that **AI usage can be private**. Users don't have to leak their query patterns + payment history to a central company. Every agent payment is shielded.
+By integrating Umbra, Aragorn shows that **AI usage can be private**. Users don't have to leak their query patterns + payment history to a central company. Every agent payment is shielded.
 
 ### 3. Open Agent Marketplace
-Aldor is a template for anyone to launch their own agent. Add your agent to `agents.ts`, give it an SNS domain, set a price, and it's live. No gatekeepers.
+Aragorn is a template for anyone to launch their own agent. Add your agent to `agents.ts`, give it an SNS domain, set a price, and it's live. No gatekeepers.
 
 ### 4. Real-World x402 Adoption
-x402 is an emerging payment standard. Aldor is one of the first production implementations showing **x402 + wallet-signed + stealth** working end-to-end.
+x402 is an emerging payment standard. Aragorn is one of the first production implementations showing **x402 + wallet-signed + stealth** working end-to-end.
 
 ### 5. Local Sovereign Compute (QVAC)
 QVAC proves that **routing doesn't need cloud LLMs**. Embeddings run on-device with llama.cpp, keeping query data local. This is critical for regulated industries (healthcare, legal, finance).
 
 ### 6. Developer Tooling
-Aldor ships with:
+Aragorn ships with:
 - Live execution trace for debugging
 - Integration diagnostics endpoint
 - Payment activity API
@@ -424,7 +406,7 @@ These tools make it easy for developers to build **their own** agentic apps on S
 ## Project Structure
 
 ```
-aldor/
+aragorn/
 ├── frontend/                 # Next.js 14 dashboard
 │   ├── app/(dashboard)/      # Dashboard pages
 │   │   ├── home/             # Agent terminal
@@ -455,7 +437,7 @@ aldor/
 
 ## License
 
-MIT — Built for the Solana community.
+MIT — Copyright © 2025 Aragorn Network. Built for the Solana community.
 
 ---
 

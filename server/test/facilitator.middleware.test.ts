@@ -22,8 +22,8 @@ describe('x402 middleware', () => {
     const mw = x402Required(
       {
         priceAtomic: 100,
-        tokenKind: 'PALM_USD',
-        snsDomain: 'summarizer.aldor.sol',
+        tokenKind: 'SOL',
+        snsDomain: 'summarizer.aragorn.sol',
         description: 'desc',
         resourcePath: '/paid',
       },
@@ -41,7 +41,7 @@ describe('x402 middleware', () => {
     assert.equal(called, false);
     assert.equal(res.statusCode, 402);
     assert.equal(res.body.x402Version, 1);
-    assert.equal(res.body.recipient, 'summarizer.aldor.sol');
+    assert.equal(res.body.recipient, 'summarizer.aragorn.sol');
     assert.equal(res.body.amount, '100');
   });
 
@@ -49,15 +49,15 @@ describe('x402 middleware', () => {
     const mw = x402Required(
       {
         priceAtomic: 100,
-        tokenKind: 'PALM_USD',
-        snsDomain: 'summarizer.aldor.sol',
+        tokenKind: 'SOL',
+        snsDomain: 'summarizer.aragorn.sol',
         description: 'desc',
         resourcePath: '/paid',
       },
       async () => false,
     );
 
-    const req: any = { header: (name: string) => (name === 'X-Aldor-Payment-Signature' ? 'fake-sig' : null) };
+    const req: any = { header: (name: string) => (name === 'X-Aragorn-Payment-Signature' ? 'fake-sig' : null) };
     const res = mockRes();
 
     await mw(req, res as any, () => {});
@@ -69,15 +69,15 @@ describe('x402 middleware', () => {
     const mw = x402Required(
       {
         priceAtomic: 100,
-        tokenKind: 'PALM_USD',
-        snsDomain: 'summarizer.aldor.sol',
+        tokenKind: 'SOL',
+        snsDomain: 'summarizer.aragorn.sol',
         description: 'desc',
         resourcePath: '/paid',
       },
       async () => true,
     );
 
-    const req: any = { header: (name: string) => (name === 'X-Aldor-Max-Depth' ? '4' : null) };
+    const req: any = { header: (name: string) => (name === 'X-Aragorn-Max-Depth' ? '4' : null) };
     const res = mockRes();
 
     await mw(req, res as any, () => {});
@@ -85,24 +85,17 @@ describe('x402 middleware', () => {
     assert.equal(res.body.error, 'MAX_DEPTH_EXCEEDED');
   });
 
-  it('builds challenge asset for SOL/PALM correctly', () => {
+  it('builds challenge asset for SOL correctly', () => {
     const req = { header: () => null } as any;
-    const palm = buildChallenge(req, {
-      priceAtomic: 100,
-      tokenKind: 'PALM_USD',
-      snsDomain: 'summarizer.aldor.sol',
-      description: 'desc',
-      resourcePath: '/paid',
-    });
     const sol = buildChallenge(req, {
       priceAtomic: 100,
       tokenKind: 'SOL',
-      snsDomain: 'weather.aldor.sol',
+      snsDomain: 'weather.aragorn.sol',
       description: 'desc',
       resourcePath: '/paid',
     });
 
     assert.equal(sol.asset, 'SOL');
-    assert.equal(typeof palm.asset, 'string');
+    assert.equal(typeof sol.asset, 'string');
   });
 });

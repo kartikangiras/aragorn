@@ -1,4 +1,4 @@
-export type TokenKind = 'SOL' | 'PALM_USD';
+export type TokenKind = 'SOL';
 
 export type StepEventType =
   | 'MANAGER_PLANNING'

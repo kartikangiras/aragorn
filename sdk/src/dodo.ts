@@ -160,8 +160,8 @@ async function ensureDodoProduct(
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...authHeaders },
     body: JSON.stringify({
-      name: 'Aldor Agent Credit',
-      description: 'Credits for agent services on Aldor',
+      name: 'Aragorn Agent Credit',
+      description: 'Credits for agent services on Aragorn',
       price: {
         type: 'one_time_price',
         price: 100,
@@ -205,7 +205,7 @@ export async function fundAgentViaDodo(
   env: NodeJS.ProcessEnv = process.env,
 ): Promise<string> {
   if ((env.MOCK_PAYMENTS ?? 'false').toLowerCase() === 'true') {
-    return `https://mock-checkout.aldor.network/fund?wallet=${walletAddress}&amount=${amountUsd}&_=${Date.now()}`;
+    return `https://mock-checkout.aragorn.network/fund?wallet=${walletAddress}&amount=${amountUsd}&_=${Date.now()}`;
   }
 
   const apiKey = getApiKey(env);
@@ -352,7 +352,7 @@ export async function offRampEarnings(
       amount: Math.round(amountStablecoin * 100),
       currency: 'USD',
       customer: {
-        email: 'agent-treasury@aldor.network',
+        email: 'agent-treasury@aragorn.network',
         name: `Agent ${agentAddress.slice(0, 8)}`,
       },
       metadata: { agent_address: agentAddress, ...destinationDetails },

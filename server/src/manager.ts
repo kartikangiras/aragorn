@@ -47,7 +47,7 @@ export function autonomousHiringDecision(
   preferRecursive = false,
 ): AgentDefinition | null {
   const affordable = candidates.filter((a) => {
-    const cost = a.token === 'PALM_USD' ? a.priceAtomic / 1_000_000 : a.priceAtomic / 1_000_000_000;
+    const cost = a.priceAtomic / 1_000_000_000;
     return cost <= budgetRemaining;
   });
 
@@ -415,21 +415,20 @@ function chooseAgent(agentName: string): AgentDefinition {
 }
 
 function buildX402Challenge(agent: AgentDefinition, netConfig: any): X402Challenge {
-  const mint = agent.token === 'SOL' ? 'SOL' : netConfig.palmUsdMint;
   const recipientWallet = getAgentWalletForDomain(agent.domain) ?? undefined;
   return {
     x402Version: 1,
     recipient: agent.domain,
     amount: String(agent.priceAtomic),
-    asset: mint,
+    asset: 'SOL',
     network: netConfig.solanaCluster === 'mainnet' ? 'solana-mainnet' : 'solana-devnet',
     expiresAt: Date.now() + 60_000,
     description: agent.description,
     resource: `${serverConfig.serverBaseUrl}${agent.path}`,
     paymentMode: serverConfig.paymentMode,
     recipientWallet,
-    mint,
-    decimals: agent.token === 'SOL' ? 9 : 6,
+    mint: 'SOL',
+    decimals: 9,
   };
 }
 
@@ -448,7 +447,6 @@ export async function runOrchestrator(
   const netConfig = networkHint ? resolveNetworkConfig(networkHint) : {
     solanaRpcUrl: serverConfig.solanaRpcUrl,
     solanaCluster: serverConfig.solanaCluster,
-    palmUsdMint: serverConfig.palmUsdMint,
     covalentChain: 'solana-devnet',
     explorerCluster: '?cluster=devnet',
   };
@@ -475,7 +473,7 @@ export async function runOrchestrator(
     sessionId: context.sessionId,
   });
 
-  let spentPalm = 0;
+  let spentSol = 0;
   const parts: string[] = [];
 
   // Set up server signer for non-wallet mode
@@ -484,19 +482,18 @@ export async function runOrchestrator(
   const signer = new PaymentSigner({
     connection: new Connection(netConfig.solanaRpcUrl, 'confirmed'),
     keypairSecretKey: payerSecret,
-    palmUsdMint: new PublicKey(netConfig.palmUsdMint),
     registryProgramId:
-      serverConfig.aldorProgramId && serverConfig.aldorProgramId !== '11111111111111111111111111111111'
-        ? new PublicKey(serverConfig.aldorProgramId)
+      serverConfig.aragornProgramId && serverConfig.aragornProgramId !== '11111111111111111111111111111111'
+        ? new PublicKey(serverConfig.aragornProgramId)
         : undefined,
   });
 
   for (const task of tasks) {
     const agent = chooseAgent(task.agent);
     const taskJobId = randomUUID();
-    const palmCost = agent.token === 'PALM_USD' ? agent.priceAtomic / 1_000_000 : 0;
+    const solCost = agent.priceAtomic / 1_000_000_000;
 
-    if (spentPalm + palmCost > budget) {
+    if (spentSol + solCost > budget) {
       emit(emitter, {
         type: 'BUDGET_EXCEEDED',
         depth,
@@ -516,7 +513,7 @@ export async function runOrchestrator(
       depth,
       agent: agent.name,
       domain: agent.domain,
-      cost: palmCost,
+      cost: solCost,
       token: agent.token,
       message: `Hiring ${agent.name} for ${formatPrice(agent)}`,
       requestId,
@@ -641,7 +638,7 @@ export async function runOrchestrator(
       },
       budget: {
         maxDepth: 3,
-        budgetRemaining: String(Math.max(budget - spentPalm, 0)),
+        budgetRemaining: String(Math.max(budget - spentSol, 0)),
       },
     });
 
@@ -659,16 +656,16 @@ export async function runOrchestrator(
     let response;
     try {
       const headers: Record<string, string> = {
-        'X-Aldor-Max-Depth': String(depth),
-        'X-Aldor-Budget-Remaining': String(Math.max(budget - spentPalm, 0)),
-        'X-Aldor-Request-Id': requestId,
-        'X-Aldor-Job-Id': taskJobId,
-        'X-Aldor-Parent-Job-Id': runJobId,
-        'X-Aldor-Session': context.sessionId ?? '',
+        'X-Aragorn-Max-Depth': String(depth),
+        'X-Aragorn-Budget-Remaining': String(Math.max(budget - spentSol, 0)),
+        'X-Aragorn-Request-Id': requestId,
+        'X-Aragorn-Job-Id': taskJobId,
+        'X-Aragorn-Parent-Job-Id': runJobId,
+        'X-Aragorn-Session': context.sessionId ?? '',
       };
       if (paymentSignature) {
-        headers['X-Aldor-Payment-Signature'] = paymentSignature;
-        headers['X-Aldor-Payer'] = payerPublicKey;
+        headers['X-Aragorn-Payment-Signature'] = paymentSignature;
+        headers['X-Aragorn-Payer'] = payerPublicKey;
       }
       console.log(`[Manager] Calling ${agent.path} for ${agent.name} with payment sig: ${paymentSignature?.slice(0, 16) ?? 'none'}`);
       response = await paid.post(`${serverConfig.serverBaseUrl}${agent.path}`, task.payload, { headers });
@@ -722,7 +719,7 @@ export async function runOrchestrator(
     });
 
     const txSig =
-      (response.config.headers as any)?.['X-Aldor-Payment-Signature'] ??
+      (response.config.headers as any)?.['X-Aragorn-Payment-Signature'] ??
       paymentSignature ??
       null;
     emit(emitter, {
@@ -735,7 +732,7 @@ export async function runOrchestrator(
       parentJobId: runJobId,
       sessionId: context.sessionId,
     });
-    spentPalm += palmCost;
+    spentSol += solCost;
 
     emit(emitter, {
       type: 'X402_SETTLED',
@@ -778,17 +775,14 @@ export async function runOrchestrator(
 }
 
 function formatPrice(agent: AgentDefinition): string {
-  if (agent.token === 'SOL') {
-    return `${agent.priceAtomic / 1_000_000_000} SOL`;
-  }
-  return `${(agent.priceAtomic / 1_000_000).toFixed(4)} Palm USD`;
+  return `${agent.priceAtomic / 1_000_000_000} SOL`;
 }
 
 export function getAgentRegistry() {
   return AGENTS.map((agent) => ({
     name: agent.name,
     domain: agent.domain,
-    priceDisplay: agent.token === 'SOL' ? `${agent.priceAtomic / 1_000_000_000} SOL` : `${(agent.priceAtomic / 1_000_000).toFixed(4)} Palm USD`,
+    priceDisplay: `${agent.priceAtomic / 1_000_000_000} SOL`,
     recursive: agent.recursive,
     reputation: agent.reputation,
     path: agent.path,

@@ -122,27 +122,29 @@ export function createApp() {
     const registryAgents = await fetchRegistryAgents(process.env, netConfig.solanaRpcUrl);
     const walletMap = getAgentWalletMap(process.env);
 
-    // Merge on-chain registry with hardcoded agents so all known agents always appear
+    // Merge on-chain registry with hardcoded agents so all known agents always appear.
+    // Core fields (price, name, category, description) always come from the hardcoded
+    // AGENTS array — the on-chain registry is enriched with activity/job data only.
     const registryMap = new Map(registryAgents.map((a) => [a.snsDomain, a]));
     const merged = AGENTS.map((agent) => {
       const onChain = registryMap.get(agent.domain);
-      if (onChain) return onChain;
       return {
         snsDomain: agent.domain,
         name: agent.name,
         category: agent.category,
         priceMicroStablecoin: String(agent.priceAtomic),
         reputationBps: String(agent.reputation),
-        totalJobs: '0',
-        successfulJobs: '0',
-        isActive: true,
+        totalJobs: onChain?.totalJobs ?? '0',
+        successfulJobs: onChain?.successfulJobs ?? '0',
+        isActive: onChain?.isActive ?? true,
         isRecursive: agent.recursive,
         capabilities: [agent.category],
         description: agent.description,
-        owner: walletMap[agent.domain] ?? '',
-        registeredAt: '0',
+        owner: walletMap[agent.domain] ?? onChain?.owner ?? '',
+        registeredAt: onChain?.registeredAt ?? '0',
         umbraStealthPublicKey: getStealthKeyForDomain(agent.domain, process.env),
-        walletAddress: walletMap[agent.domain],
+        walletAddress: walletMap[agent.domain] ?? onChain?.walletAddress ?? '',
+        token: agent.token,
       };
     });
 

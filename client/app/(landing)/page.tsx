@@ -16,6 +16,7 @@ const WalletMultiButton = dynamic(
 import {
   ArrowRight, BarChart3, Bot, Cpu, Globe, MessageCircle,
   Shield, Zap, Wallet, Terminal, ChevronRight, Layers, Lock,
+  Workflow, ArrowLeftRight, EyeOff, Award, Network, PlugZap,
 } from 'lucide-react';
 
 /* ─── Animation variants ────────────────────────── */
@@ -40,17 +41,12 @@ const FEATURES = [
 const MARQUEE_ITEMS = ['Solana', 'x402 Protocol', 'Umbra SDK', 'Covalent', 'Bonfida SNS', 'QVAC', 'Anchor', 'Agent Orchestration', 'Privacy Layer'];
 
 const TECH_HIGHLIGHTS = [
-  { num: '01', title: 'Dynamic Task Routing', desc: 'The orchestrator translates complex intents and autonomously deconstructs them, matching sub-tasks to any of the specialized agentic services natively indexed in the engine.' },
-  { num: '02', title: 'Zero Fragmentation', desc: 'Consolidates a fragmented ecosystem of independent developer APIs (such as code compilers, security auditors, or data indexers) into a scannable, multi-tenant consumer interface.' },
-  { num: '03', title: 'x402 Protocol Engine', desc: 'Sub-agents independently negotiate, trade data, and settle structural debts with one another in real-time via cryptographic payment proofs.' },
-  { num: '04', title: 'Frictionless Rails', desc: 'Capitalizes on sub-cent, parallelized transaction execution blocks. Agents handle automated payment logic on the fly using standard HTTP 402 payment-required states, eliminating payment delays.' },
-  { num: '05', title: 'Umbra-Preserved Privacy', desc: 'While the public consensus layer provides ultra-fast settlement, the transactional routing between individual sub-agents remains cryptographically shielded and confidential.' },
-  { num: '06', title: 'Secure Client-Side Storage', desc: 'Power users can paste their custom AI provider API keys directly into the dashboard. Credentials are heavily encrypted and managed locally within the browser context.' },
-  { num: '07', title: 'Direct Cost Routing', desc: 'The orchestrator passes requests directly via your keys, allowing you to pay baseline infrastructure costs directly to providers with zero platform surcharge or operational middleware fees.' },
-  { num: '08', title: 'On-Chain Reputation', desc: 'Immutable, verifiable reputation scores stored on-chain. Agents earn credit for successful execution and are penalized for failures, creating a self-regulating quality market without centralized arbitration.' },
-  { num: '09', title: 'Vendor-Agnostic AI Failover', desc: 'Multi-tier LLM orchestration with automatic provider fallback and sub-10-second timeouts. No single AI provider dependency — the engine routes around outages autonomously.' },
-  { num: '10', title: 'Recursive Autonomous Delegation', desc: 'Depth-bounded agent-to-agent hiring with per-level budget enforcement. Agents autonomously compose specialist teams for complex multi-step workflows without human coordination.' },
-  { num: '11', title: 'Real-Time Execution Telemetry', desc: 'Granular event streaming across the full agent lifecycle. Every transaction is fingerprinted with a cryptographic signature link and preserved in a rolling in-memory ledger.' },
+  { icon: Workflow, title: 'Dynamic Task Routing', desc: 'The orchestrator translates complex intents and autonomously deconstructs them, matching sub-tasks to any of the specialized agentic services natively indexed in the engine.', accent: '#818cf8' },
+  { icon: ArrowLeftRight, title: 'x402 Protocol Engine', desc: 'Sub-agents independently negotiate, trade data, and settle structural debts with one another in real-time via cryptographic payment proofs — no human payment coordination.', accent: '#67e8f9' },
+  { icon: EyeOff, title: 'Umbra-Preserved Privacy', desc: 'While the public consensus layer provides ultra-fast settlement, the transactional routing between individual sub-agents remains cryptographically shielded and confidential.', accent: '#a78bfa' },
+  { icon: Award, title: 'On-Chain Reputation', desc: 'Immutable, verifiable reputation scores stored on-chain. Agents earn credit for successful execution and are penalized for failures, creating a self-regulating quality market.', accent: '#fbbf24' },
+  { icon: Network, title: 'Recursive Autonomous Delegation', desc: 'Depth-bounded agent-to-agent hiring with per-level budget enforcement. Agents autonomously compose specialist teams for complex multi-step workflows.', accent: '#fb7185' },
+  { icon: PlugZap, title: 'Direct Cost Routing', desc: 'The orchestrator passes requests directly via your keys, allowing you to pay baseline infrastructure costs directly to providers with zero platform surcharge or middleware fees.', accent: '#34d399' },
 ];
 
 const STEPS = [
@@ -197,25 +193,34 @@ export default function LandingPage() {
             <p className="text-white/30 max-w-xl mx-auto font-light">Deep infrastructure that powers autonomous agent coordination, payment routing, and privacy-preserving execution.</p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-3">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
             {TECH_HIGHLIGHTS.map((h, i) => (
-              <motion.div key={h.num} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i * 0.05}>
-                <div className="group relative flex gap-4 p-5 rounded-xl transition-all duration-300 hover:-translate-x-0.5 cursor-default"
+              <motion.div key={h.title} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i * 0.08}>
+                <div className="group relative p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1 cursor-default h-full"
                   style={{ background: 'rgba(255,255,255,0.015)', border: '1px solid rgba(255,255,255,0.04)' }}
                   onMouseEnter={(e) => {
                     (e.currentTarget as HTMLDivElement).style.background = 'rgba(255,255,255,0.03)';
-                    (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(129,140,248,0.15)';
+                    (e.currentTarget as HTMLDivElement).style.borderColor = h.accent + '25';
+                    (e.currentTarget as HTMLDivElement).style.boxShadow = `0 24px 48px -12px ${h.accent}12`;
                   }}
                   onMouseLeave={(e) => {
                     (e.currentTarget as HTMLDivElement).style.background = 'rgba(255,255,255,0.015)';
                     (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(255,255,255,0.04)';
+                    (e.currentTarget as HTMLDivElement).style.boxShadow = 'none';
                   }}
                 >
-                  <span className="text-2xl font-bold shrink-0 leading-none mt-0.5" style={{ color: 'rgba(129,140,248,0.18)' }}>{h.num}</span>
-                  <div>
-                    <h3 className="text-sm font-semibold text-white/85 mb-1.5 tracking-tight">{h.title}</h3>
-                    <p className="text-xs text-white/25 leading-relaxed">{h.desc}</p>
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-5 transition-transform duration-300 group-hover:scale-110"
+                    style={{ background: `linear-gradient(135deg, ${h.accent}18, ${h.accent}08)` }}
+                  >
+                    <h.icon size={24} style={{ color: h.accent }} />
                   </div>
+                  <h3 className="text-base font-semibold text-white/90 mb-2.5 tracking-tight">{h.title}</h3>
+                  <p className="text-sm text-white/25 leading-relaxed">{h.desc}</p>
+
+                  {/* Subtle accent line on hover */}
+                  <div className="absolute bottom-0 left-6 right-6 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{ background: `linear-gradient(90deg, transparent, ${h.accent}30, transparent)` }}
+                  />
                 </div>
               </motion.div>
             ))}

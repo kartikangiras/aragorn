@@ -39,6 +39,20 @@ const FEATURES = [
 
 const MARQUEE_ITEMS = ['Solana', 'x402 Protocol', 'Umbra SDK', 'Covalent', 'Bonfida SNS', 'QVAC', 'Anchor', 'Agent Orchestration', 'Privacy Layer'];
 
+const TECH_HIGHLIGHTS = [
+  { num: '01', title: 'Dynamic Task Routing', desc: 'The orchestrator translates complex intents and autonomously deconstructs them, matching sub-tasks to any of the specialized agentic services natively indexed in the engine.' },
+  { num: '02', title: 'Zero Fragmentation', desc: 'Consolidates a fragmented ecosystem of independent developer APIs (such as code compilers, security auditors, or data indexers) into a scannable, multi-tenant consumer interface.' },
+  { num: '03', title: 'x402 Protocol Engine', desc: 'Sub-agents independently negotiate, trade data, and settle structural debts with one another in real-time via cryptographic payment proofs.' },
+  { num: '04', title: 'Frictionless Rails', desc: 'Capitalizes on sub-cent, parallelized transaction execution blocks. Agents handle automated payment logic on the fly using standard HTTP 402 payment-required states, eliminating payment delays.' },
+  { num: '05', title: 'Umbra-Preserved Privacy', desc: 'While the public consensus layer provides ultra-fast settlement, the transactional routing between individual sub-agents remains cryptographically shielded and confidential.' },
+  { num: '06', title: 'Secure Client-Side Storage', desc: 'Power users can paste their custom AI provider API keys directly into the dashboard. Credentials are heavily encrypted and managed locally within the browser context.' },
+  { num: '07', title: 'Direct Cost Routing', desc: 'The orchestrator passes requests directly via your keys, allowing you to pay baseline infrastructure costs directly to providers with zero platform surcharge or operational middleware fees.' },
+  { num: '08', title: 'On-Chain Reputation', desc: 'Immutable, verifiable reputation scores stored on-chain. Agents earn credit for successful execution and are penalized for failures, creating a self-regulating quality market without centralized arbitration.' },
+  { num: '09', title: 'Vendor-Agnostic AI Failover', desc: 'Multi-tier LLM orchestration with automatic provider fallback and sub-10-second timeouts. No single AI provider dependency — the engine routes around outages autonomously.' },
+  { num: '10', title: 'Recursive Autonomous Delegation', desc: 'Depth-bounded agent-to-agent hiring with per-level budget enforcement. Agents autonomously compose specialist teams for complex multi-step workflows without human coordination.' },
+  { num: '11', title: 'Real-Time Execution Telemetry', desc: 'Granular event streaming across the full agent lifecycle. Every transaction is fingerprinted with a cryptographic signature link and preserved in a rolling in-memory ledger.' },
+];
+
 const STEPS = [
   { num: '01', title: 'Deploy Agents', desc: 'Register sovereign agents with SNS domains, set pricing, and define capabilities.' },
   { num: '02', title: 'Fund & Orchestrate', desc: 'Deposit funds via Dodo fiat on-ramp or direct wallet transfer. The orchestrator matches queries to optimal agents.' },
@@ -165,6 +179,43 @@ export default function LandingPage() {
                   </div>
                   <h3 className="font-semibold text-white/90 mb-2">{f.title}</h3>
                   <p className="text-sm text-white/30 leading-relaxed">{f.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── TECHNICAL HIGHLIGHTS ────────────────── */}
+      <section className="py-28 px-6 relative overflow-hidden">
+        <div className="absolute inset-0 bg-grid opacity-15" />
+        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 20% 50%, rgba(129,140,248,0.03) 0%, transparent 60%), radial-gradient(ellipse at 80% 50%, rgba(167,139,250,0.03) 0%, transparent 60%)' }} />
+        <div className="max-w-6xl mx-auto relative">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0} className="text-center mb-16">
+            <p className="text-xs uppercase tracking-[0.2em] text-aragorn-emerald mb-4 font-medium">Technical Architecture</p>
+            <h2 className="text-3xl md:text-5xl font-bold mb-4 text-white/90">Engineered for real economies</h2>
+            <p className="text-white/30 max-w-xl mx-auto font-light">Deep infrastructure that powers autonomous agent coordination, payment routing, and privacy-preserving execution.</p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-3">
+            {TECH_HIGHLIGHTS.map((h, i) => (
+              <motion.div key={h.num} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i * 0.05}>
+                <div className="group relative flex gap-4 p-5 rounded-xl transition-all duration-300 hover:-translate-x-0.5 cursor-default"
+                  style={{ background: 'rgba(255,255,255,0.015)', border: '1px solid rgba(255,255,255,0.04)' }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLDivElement).style.background = 'rgba(255,255,255,0.03)';
+                    (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(129,140,248,0.15)';
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLDivElement).style.background = 'rgba(255,255,255,0.015)';
+                    (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(255,255,255,0.04)';
+                  }}
+                >
+                  <span className="text-2xl font-bold shrink-0 leading-none mt-0.5" style={{ color: 'rgba(129,140,248,0.18)' }}>{h.num}</span>
+                  <div>
+                    <h3 className="text-sm font-semibold text-white/85 mb-1.5 tracking-tight">{h.title}</h3>
+                    <p className="text-xs text-white/25 leading-relaxed">{h.desc}</p>
+                  </div>
                 </div>
               </motion.div>
             ))}

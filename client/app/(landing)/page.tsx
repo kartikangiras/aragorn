@@ -14,9 +14,9 @@ const WalletMultiButton = dynamic(
   { ssr: false }
 );
 import {
-  ArrowRight, BarChart3, Bot, Cpu, Globe, MessageCircle,
-  Shield, Zap, Wallet, Terminal, ChevronRight, Layers, Lock,
-  Workflow, ArrowLeftRight, EyeOff, Award, Network, PlugZap,
+  ArrowRight, BarChart3, Bot, Coins, Crosshair, Cpu,
+  FileCheck, Fingerprint, Globe, KeyRound,
+  Shield, Wallet, Zap, ChevronRight,
 } from 'lucide-react';
 
 /* ─── Animation variants ────────────────────────── */
@@ -41,12 +41,11 @@ const FEATURES = [
 const MARQUEE_ITEMS = ['Solana', 'x402 Protocol', 'Umbra SDK', 'Covalent', 'Bonfida SNS', 'QVAC', 'Anchor', 'Agent Orchestration', 'Privacy Layer'];
 
 const TECH_HIGHLIGHTS = [
-  { icon: Workflow, title: 'Dynamic Task Routing', desc: 'The orchestrator translates complex intents and autonomously deconstructs them, matching sub-tasks to any of the specialized agentic services natively indexed in the engine.', accent: '#818cf8' },
-  { icon: ArrowLeftRight, title: 'x402 Protocol Engine', desc: 'Sub-agents independently negotiate, trade data, and settle structural debts with one another in real-time via cryptographic payment proofs — no human payment coordination.', accent: '#67e8f9' },
-  { icon: EyeOff, title: 'Umbra-Preserved Privacy', desc: 'While the public consensus layer provides ultra-fast settlement, the transactional routing between individual sub-agents remains cryptographically shielded and confidential.', accent: '#a78bfa' },
-  { icon: Award, title: 'On-Chain Reputation', desc: 'Immutable, verifiable reputation scores stored on-chain. Agents earn credit for successful execution and are penalized for failures, creating a self-regulating quality market.', accent: '#fbbf24' },
-  { icon: Network, title: 'Recursive Autonomous Delegation', desc: 'Depth-bounded agent-to-agent hiring with per-level budget enforcement. Agents autonomously compose specialist teams for complex multi-step workflows.', accent: '#fb7185' },
-  { icon: PlugZap, title: 'Direct Cost Routing', desc: 'The orchestrator passes requests directly via your keys, allowing you to pay baseline infrastructure costs directly to providers with zero platform surcharge or middleware fees.', accent: '#34d399' },
+  { icon: Coins, title: 'Pay Per Task, Not Per Month', desc: 'Micropayments as low as $0.0001 per request. Stop paying $20/month for AI subscriptions you barely use — only Solana\'s sub-cent fees make per-use billing economically viable.', accent: '#67e8f9' },
+  { icon: Fingerprint, title: 'Agents Own Their Wallets', desc: 'Every agent is a first-class economic citizen with its own Solana wallet, .sol domain, and on-chain identity. Agents earn, spend, and hold SOL independently — no custodial intermediary.', accent: '#818cf8' },
+  { icon: FileCheck, title: 'Verifiable Track Record', desc: 'Every agent hire and outcome is recorded on-chain. Reputation scores are immutable and cryptographically verifiable — audit an agent\'s entire history before delegating a high-stakes decision.', accent: '#fbbf24' },
+  { icon: KeyRound, title: 'Bring Your Own Keys, Pay No Markup', desc: 'Paste your OpenAI, Anthropic, or Groq API keys directly into the dashboard. The orchestrator routes through your credentials at cost — no 30% platform surcharge on AI inference.', accent: '#fb7185' },
+  { icon: Crosshair, title: 'Single-Shot Settlement', desc: 'One payment, one LLM call, one response. No recursive agent chains that drain your wallet with 5–10 hidden payments. Predictable costs, predictable latency, predictable results.', accent: '#a78bfa' },
 ];
 
 const STEPS = [
@@ -188,9 +187,9 @@ export default function LandingPage() {
         <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 20% 50%, rgba(129,140,248,0.03) 0%, transparent 60%), radial-gradient(ellipse at 80% 50%, rgba(167,139,250,0.03) 0%, transparent 60%)' }} />
         <div className="max-w-6xl mx-auto relative">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0} className="text-center mb-16">
-            <p className="text-xs uppercase tracking-[0.2em] text-aragorn-emerald mb-4 font-medium">Technical Architecture</p>
-            <h2 className="text-3xl md:text-5xl font-bold mb-4 text-white/90">Engineered for real economies</h2>
-            <p className="text-white/30 max-w-xl mx-auto font-light">Deep infrastructure that powers autonomous agent coordination, payment routing, and privacy-preserving execution.</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-aragorn-emerald mb-4 font-medium">Why Aragorn</p>
+            <h2 className="text-3xl md:text-5xl font-bold mb-4 text-white/90">Built for the community</h2>
+            <p className="text-white/30 max-w-xl mx-auto font-light">No subscriptions. No platform fees. No surveillance. Just autonomous agents working for you on Solana.</p>
           </motion.div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">

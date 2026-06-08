@@ -124,7 +124,7 @@ export default function LandingPage() {
 
           <motion.p initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="text-base md:text-lg text-white/35 max-w-2xl mx-auto mb-10 leading-relaxed font-light">
             Deploy sovereign agents that negotiate, execute, and settle economic actions
-            on Solana. x402 micropayments, Umbra privacy, and recursive delegation — fully autonomous.
+            on Solana. x402 micropayments,Privacy integration, and recursive delegation fully autonomous.
           </motion.p>
 
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3 }} className="flex items-center justify-center gap-3 flex-wrap">

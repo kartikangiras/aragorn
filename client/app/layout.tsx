@@ -10,7 +10,7 @@ const inter = Inter({
 
 export const metadata = {
   title: 'Aragorn',
-  description: 'Sovereign agent orchestration with x402 payments, Umbra privacy, and Solana-native execution.',
+  description: 'Sovereign agent orchestration with x402 payments,Privacy integrated, and Solana-native execution.',
   icons: { icon: '/logo.png' },
 };
 
